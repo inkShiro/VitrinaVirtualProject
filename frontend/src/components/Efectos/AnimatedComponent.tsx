@@ -1,4 +1,3 @@
-// src/components/AnimatedComponent.tsx}
 "use client";
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -7,6 +6,8 @@ const AnimatedComponent: React.FC<{ children: React.ReactNode }> = ({ children }
   const [isVisible, setIsVisible] = useState(false); // Estado de visibilidad
 
   useEffect(() => {
+    const currentRef = ref.current; // Copia ref.current a una variable local
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -20,13 +21,13 @@ const AnimatedComponent: React.FC<{ children: React.ReactNode }> = ({ children }
       { threshold: 0.1 } // Cambia cuando el 10% del componente es visible
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
   }, []);

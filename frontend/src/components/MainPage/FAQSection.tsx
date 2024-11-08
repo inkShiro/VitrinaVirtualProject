@@ -20,11 +20,11 @@ export default function FAQSection() {
               onClick={() => toggleAnswer('question1')}
             >
               <h3 className="text-xl font-semibold text-gray-800">¿Cómo puedo registrarme en la plataforma?</h3>
-              <span>{activeQuestion === 'question1' ? '-' : '+'}</span>
+              <span>{activeQuestion === 'question1' ? '&ndash;' : '&plus;'}</span>
             </div>
             {activeQuestion === 'question1' && (
               <p className="text-gray-600 mt-2">
-                Puedes registrarte usando el botón de "Registrarse" en el encabezado de la página. Solo necesitas proporcionar tu nombre, correo electrónico, y crear una contraseña.
+                Puedes registrarte usando el botón de &quot;Registrarse&quot; en el encabezado de la página. Solo necesitas proporcionar tu nombre, correo electrónico, y crear una contraseña.
               </p>
             )}
           </div>
@@ -36,7 +36,7 @@ export default function FAQSection() {
               onClick={() => toggleAnswer('question2')}
             >
               <h3 className="text-xl font-semibold text-gray-800">¿Cómo puedo encontrar proyectos relevantes?</h3>
-              <span>{activeQuestion === 'question2' ? '-' : '+'}</span>
+              <span>{activeQuestion === 'question2' ? '&ndash;' : '&plus;'}</span>
             </div>
             {activeQuestion === 'question2' && (
               <p className="text-gray-600 mt-2">
@@ -52,7 +52,7 @@ export default function FAQSection() {
               onClick={() => toggleAnswer('question3')}
             >
               <h3 className="text-xl font-semibold text-gray-800">¿Puedo proteger mi propiedad intelectual?</h3>
-              <span>{activeQuestion === 'question3' ? '-' : '+'}</span>
+              <span>{activeQuestion === 'question3' ? '&ndash;' : '&plus;'}</span>
             </div>
             {activeQuestion === 'question3' && (
               <p className="text-gray-600 mt-2">

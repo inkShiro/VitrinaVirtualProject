@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaUser, FaProjectDiagram, FaEnvelope, FaCog, FaSearch } from 'react-icons/fa';
 import Sidebar from '../../components/Dashboard/Sidebar';
+import Image from 'next/image';
 
 const DashboardPage = () => {
   const [userType, setUserType] = useState<"Estudiante" | "Empresa">("Estudiante");
@@ -36,7 +37,13 @@ const DashboardPage = () => {
           <div className="space-y-6">
             {/* Vista de Estudiante */}
             <div className="flex items-center space-x-4">
-              <img src="/default-avatar.png" alt="Imagen de Perfil" className="w-16 h-16 rounded-full" />
+              <Image 
+                src="/default-avatar.png" 
+                alt="Imagen de Perfil" 
+                width={64} 
+                height={64} 
+                className="rounded-full" 
+              />
               <div>
                 <h3 className="font-bold">Juan Pérez</h3>
                 <p>Carrera de Ingeniería</p>
@@ -60,7 +67,13 @@ const DashboardPage = () => {
               <div className="space-y-4 mt-4">
                 <div className="flex justify-between items-center">
                   <div className="flex space-x-3">
-                    <img src="/project-thumbnail.png" alt="Proyecto" className="w-16 h-16 object-cover rounded" />
+                    <Image 
+                      src="/project-thumbnail.png" 
+                      alt="Proyecto" 
+                      width={64} 
+                      height={64} 
+                      className="object-cover rounded" 
+                    />
                     <div>
                       <h5 className="font-semibold">Proyecto de IA</h5>
                       <p className="text-sm text-gray-500">Estado: En revisión</p>

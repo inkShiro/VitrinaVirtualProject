@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 export default function TestimonialsSection() {
   return (
@@ -9,13 +10,15 @@ export default function TestimonialsSection() {
           {/* Testimonio de Estudiante */}
           <div className="testimonial-card p-6 max-w-sm bg-white rounded-lg shadow-lg hover:shadow-xl transition">
             <p className="text-gray-600 italic mb-4">
-              "Gracias a esta plataforma, pude conectar con una empresa que estaba buscando proyectos académicos en mi área de estudio. Mi portafolio fue clave para conseguir mi primer empleo."
+              &quot;Gracias a esta plataforma, pude conectar con una empresa que estaba buscando proyectos académicos en mi área de estudio. Mi portafolio fue clave para conseguir mi primer empleo.&quot;
             </p>
             <div className="flex items-center justify-center">
-              <img
+              <Image
                 src="https://via.placeholder.com/50"
                 alt="Estudiante"
-                className="w-12 h-12 rounded-full mr-4"
+                width={50}
+                height={50}
+                className="rounded-full mr-4"
               />
               <div>
                 <p className="font-semibold">Ana Pérez</p>
@@ -27,13 +30,15 @@ export default function TestimonialsSection() {
           {/* Testimonio de Empresa */}
           <div className="testimonial-card p-6 max-w-sm bg-white rounded-lg shadow-lg hover:shadow-xl transition">
             <p className="text-gray-600 italic mb-4">
-              "La plataforma nos permitió encontrar proyectos innovadores para colaborar con estudiantes talentosos. Ha sido una gran herramienta para identificar futuros talentos para nuestra empresa."
+              &quot;La plataforma nos permitió encontrar proyectos innovadores para colaborar con estudiantes talentosos. Ha sido una gran herramienta para identificar futuros talentos para nuestra empresa.&quot;
             </p>
             <div className="flex items-center justify-center">
-              <img
+              <Image
                 src="https://via.placeholder.com/50"
                 alt="Empresa"
-                className="w-12 h-12 rounded-full mr-4"
+                width={50}
+                height={50}
+                className="rounded-full mr-4"
               />
               <div>
                 <p className="font-semibold">Carlos López</p>
@@ -45,13 +50,15 @@ export default function TestimonialsSection() {
           {/* Testimonio adicional */}
           <div className="testimonial-card p-6 max-w-sm bg-white rounded-lg shadow-lg hover:shadow-xl transition">
             <p className="text-gray-600 italic mb-4">
-              "Me encantó poder filtrar los proyectos y encontrar exactamente lo que buscaba. Además, el portafolio me permitió mostrar mis habilidades de manera efectiva."
+              &quot;Me encantó poder filtrar los proyectos y encontrar exactamente lo que buscaba. Además, el portafolio me permitió mostrar mis habilidades de manera efectiva.&quot;
             </p>
             <div className="flex items-center justify-center">
-              <img
+              <Image
                 src="https://via.placeholder.com/50"
                 alt="Estudiante"
-                className="w-12 h-12 rounded-full mr-4"
+                width={50}
+                height={50}
+                className="rounded-full mr-4"
               />
               <div>
                 <p className="font-semibold">Javier Rodríguez</p>
