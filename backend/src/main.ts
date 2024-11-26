@@ -1,9 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ExpressAdapter } from '@nestjs/platform-express';
+import * as express from 'express';
+
+const server = express();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(server));
   app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
@@ -16,7 +20,9 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.enableCors();
-
-  await app.listen(4000);
+  await app.init(); // Inicializa la aplicación NestJS sin escuchar un puerto
 }
+
 bootstrap();
+
+export default server; // Exporta el servidor como handler para Vercel
