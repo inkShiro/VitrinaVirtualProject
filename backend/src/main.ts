@@ -1,12 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import * as serverless from 'serverless-http';
-
-let app: any;
 
 async function bootstrap() {
-  app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
@@ -22,8 +19,4 @@ async function bootstrap() {
   await app.init();
 }
 
-// Llama a bootstrap para inicializar la app
 bootstrap();
-
-// Exporta el handler de la aplicación para Vercel
-export const handler = serverless(app);
