@@ -52,13 +52,15 @@ export class ProjectsService {
 
   async findByAuthorId(authorId: number) {
     return this.prisma.project.findMany({
-      where: { authorId },
+      where: {
+        authorId: authorId, // Correctly reference the authorId field
+      },
       include: {
         author: true,
         collaborators: true,
         categories: true,
         files: true,
-      },
+      }
     });
   }
 
@@ -66,15 +68,17 @@ export class ProjectsService {
     return this.prisma.project.findMany({
       where: {
         collaborators: {
-          some: { id: collaboratorId },
-        },
+          some: {
+            id: collaboratorId, // Correctly reference the collaborator's id field
+          }
+        }
       },
       include: {
         author: true,
         collaborators: true,
         categories: true,
         files: true,
-      },
+      }
     });
   }
 

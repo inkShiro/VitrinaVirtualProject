@@ -51,6 +51,7 @@ export default function LoginForm() {
       const data = await response.json();
 
       if (response.ok) {
+        localStorage.clear();
         // Almacenar el access_token y el id del usuario
         localStorage.setItem('access_token', data.access_token); // Asumimos que la API devuelve el access_token
         localStorage.setItem('user_id', data.user_id); // Asumimos que la API devuelve el id del usuario

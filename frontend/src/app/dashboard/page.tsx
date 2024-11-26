@@ -26,45 +26,37 @@ const DashboardPage = () => {
     setUserId(storedUserId);
     setUserType(accountType === 'empresa' ? "Empresa" : "Estudiante");
 
-    handleAccountTypeProcess();
+    const loadDataFromStorage = async () => {
+      const cachedStudentData = localStorage.getItem('studentData');
+      const cachedAdditionalData = localStorage.getItem('additionalData');
+      const cachedAuthorProjects = localStorage.getItem('authorProjects');
+      const cachedCollaboratorProjects = localStorage.getItem('collaboratorProjects');
+      let cachedSessionId = localStorage.getItem('sessionId');
 
-    
+      if (!cachedSessionId) {
+        console.log("No se encontró sessionId en el localStorage, realizando fetch...");
+        const response = await fetch(`${API_BASE_URL}/students/user/${storedUserId}`);
+        const data = await response.json();
+        cachedSessionId = JSON.stringify(data.id);
+        localStorage.setItem('sessionId', cachedSessionId);
+      }
+
+      if (cachedSessionId) {
+        setSessionId(JSON.parse(cachedSessionId));
+        console.log("Session ID establecido:", JSON.parse(cachedSessionId));
+      }
+
+      if (cachedStudentData) setStudentData(JSON.parse(cachedStudentData));
+      if (cachedAdditionalData) setAdditionalData(JSON.parse(cachedAdditionalData));
+      if (cachedAuthorProjects) setAuthorProjects(JSON.parse(cachedAuthorProjects));
+      if (cachedCollaboratorProjects) setCollaboratorProjects(JSON.parse(cachedCollaboratorProjects));
+    };
+
+    loadDataFromStorage();
   }, []);
 
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <LoadingSpinner />
-      </div>
-    );
-  }
-
-  const loadDataFromStorage = async () => {
-    const cachedStudentData = localStorage.getItem(`studentData`);
-    const cachedAdditionalData = localStorage.getItem(`additionalData`);
-    const cachedAuthorProjects = localStorage.getItem(`authorProjects`);
-    const cachedCollaboratorProjects = localStorage.getItem(`collaboratorProjects`);
-    let cachedSessionId = localStorage.getItem(`sessionId`);
-
-    if (!cachedSessionId) {
-      console.log("No se encontró sessionId en el localStorage, realizando fetch...");
-      const response = await fetch(`${API_BASE_URL}/students/user/${userId}`);
-      const data = await response.json();
-      cachedSessionId = JSON.stringify(data.id);
-      localStorage.setItem(`sessionId`, cachedSessionId);
-    }
-
-    setSessionId(JSON.parse(cachedSessionId));
-    console.log("Session ID establecido:", JSON.parse(cachedSessionId));
-
-    if (cachedStudentData) setStudentData(JSON.parse(cachedStudentData));
-    if (cachedAdditionalData) setAdditionalData(JSON.parse(cachedAdditionalData));
-    if (cachedAuthorProjects) setAuthorProjects(JSON.parse(cachedAuthorProjects));
-    if (cachedCollaboratorProjects) setCollaboratorProjects(JSON.parse(cachedCollaboratorProjects));
-  };
-
-  if (!sessionId || !userId) return;
+  useEffect(() => {
+    if (!sessionId || !userId) return;
 
     const fetchData = async () => {
       try {
@@ -72,9 +64,7 @@ const DashboardPage = () => {
           const response = await fetch(`${API_BASE_URL}/students/user/${userId}`);
           const data = await response.json();
           setStudentData(data);
-          setSessionId(data.id);
-          localStorage.setItem(`studentData`, JSON.stringify(data));
-          localStorage.setItem(`sessionId`, JSON.stringify(data.id));
+          localStorage.setItem('studentData', JSON.stringify(data));
           console.log("Datos del estudiante cargados:", data);
         }
 
@@ -82,24 +72,26 @@ const DashboardPage = () => {
           const response = await fetch(`${API_BASE_URL}/users/${userId}`);
           const data = await response.json();
           setAdditionalData(data);
-          localStorage.setItem(`additionalData`, JSON.stringify(data));
+          localStorage.setItem('additionalData', JSON.stringify(data));
           console.log("Datos adicionales del usuario cargados:", data);
         }
 
-        if (!authorProjects) {
-          const response = await fetch(`${API_BASE_URL}/projects/author/${sessionId}`);
-          const projects = await response.json();
-          setAuthorProjects(projects);
-          localStorage.setItem(`authorProjects`, JSON.stringify(projects));
-          console.log("Proyectos de autor cargados:", projects);
-        }
+        if (sessionId) { // Verificamos que sessionId no sea null antes de usarlo
+          if (!authorProjects) {
+            const response = await fetch(`${API_BASE_URL}/projects/author/${sessionId}`);
+            const projects = await response.json();
+            setAuthorProjects(projects);
+            localStorage.setItem('authorProjects', JSON.stringify(projects));
+            console.log("Proyectos de autor cargados:", projects);
+          }
 
-        if (!collaboratorProjects) {
-          const response = await fetch(`${API_BASE_URL}/projects/collaborator/${sessionId}`);
-          const projects = await response.json();
-          setCollaboratorProjects(projects);
-          localStorage.setItem(`collaboratorProjects`, JSON.stringify(projects));
-          console.log("Proyectos de colaborador cargados:", projects);
+          if (!collaboratorProjects) {
+            const response = await fetch(`${API_BASE_URL}/projects/collaborator/${sessionId}`);
+            const projects = await response.json();
+            setCollaboratorProjects(projects);
+            localStorage.setItem('collaboratorProjects', JSON.stringify(projects));
+            console.log("Proyectos de colaborador cargados:", projects);
+          }
         }
 
         setLoading(false);
@@ -109,38 +101,16 @@ const DashboardPage = () => {
       }
     };
 
-  const handleAccountTypeProcess = () => {
-    if (userType === "Estudiante") {
-      loadDataFromStorage();
-      fetchData(), ([sessionId, studentData, additionalData, authorProjects, collaboratorProjects, userId]);
-    } else if (userType === "Empresa") {
-      // Procesos específicos para Empresa
-    }
-  };
+    fetchData();
+  }, [sessionId, studentData, additionalData, authorProjects, collaboratorProjects, userId]);
 
-  function getAllLocalStorageData(): Record<string, any> {
-    const localStorageData: Record<string, any> = {};
-  
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key) {
-        try {
-          // Intenta parsear el valor como JSON, de lo contrario, guarda como string
-          const value = localStorage.getItem(key);
-          localStorageData[key] = value ? JSON.parse(value) : null;
-        } catch {
-          // Si no se puede parsear como JSON, guarda el valor como string
-          localStorageData[key] = localStorage.getItem(key);
-        }
-      }
-    }
-  
-    return localStorageData;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <LoadingSpinner />
+      </div>
+    );
   }
-  
-  // Ejemplo de uso
-  const allData = getAllLocalStorageData();
-  console.log(allData);
 
   return (
     <div className="flex min-h-screen">
@@ -173,7 +143,7 @@ const DashboardPage = () => {
                 mode="simple" 
               />
               <CollaboratorProjectsList 
-                projects={authorProjects || []}
+                projects={collaboratorProjects || []}
                 sessionId={sessionId || ''}
                 userId={userId || ''}
                 mode="simple" 
