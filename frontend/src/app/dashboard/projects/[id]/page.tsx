@@ -66,7 +66,7 @@ const ProjectDetails: React.FC = () => {
   const fetchProjectDetails = async (projectId: string) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:4000/api/projects/${projectId}`);
+      const response = await fetch('${API_BASE_URL}/projects/${projectId}');
       if (!response.ok) {
         throw new Error('Proyecto no encontrado');
       }
@@ -118,7 +118,8 @@ const ProjectDetails: React.FC = () => {
   const fetchUserNames = async (users: { userId: string }[]) => {
     try {
       const userIds = users.map(user => user.userId);
-      const response = await fetch(`http://localhost:4000/api/users?ids=${userIds.join(',')}`);
+      const response = await fetch("${API_BASE_URL}/users?ids=${userIds.join(',')}");
+
       const userData = await response.json();
 
       return users.map(user => {

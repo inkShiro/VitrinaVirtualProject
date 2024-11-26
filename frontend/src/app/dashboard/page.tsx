@@ -47,7 +47,7 @@ const DashboardPage = () => {
 
     if (!cachedSessionId) {
       console.log("No se encontró sessionId en el localStorage, realizando fetch...");
-      const response = await fetch(`http://localhost:4000/api/students/user/${userId}`);
+      const response = await fetch('${API_BASE_URL}/students/user/${userId}');
       const data = await response.json();
       cachedSessionId = JSON.stringify(data.id);
       localStorage.setItem(`sessionId`, cachedSessionId);
@@ -67,7 +67,7 @@ const DashboardPage = () => {
     const fetchData = async () => {
       try {
         if (!studentData) {
-          const response = await fetch(`http://localhost:4000/api/students/user/${userId}`);
+          const response = await fetch('${API_BASE_URL}/students/user/${userId}');
           const data = await response.json();
           setStudentData(data);
           setSessionId(data.id);
@@ -77,7 +77,7 @@ const DashboardPage = () => {
         }
 
         if (!additionalData) {
-          const response = await fetch(`http://localhost:4000/api/users/${userId}`);
+          const response = await fetch('${API_BASE_URL}/users/${userId}');
           const data = await response.json();
           setAdditionalData(data);
           localStorage.setItem(`additionalData`, JSON.stringify(data));
@@ -85,7 +85,7 @@ const DashboardPage = () => {
         }
 
         if (!authorProjects) {
-          const response = await fetch(`http://localhost:4000/api/projects/author/${sessionId}`);
+          const response = await fetch('${API_BASE_URL}/projects/author/${sessionId}');
           const projects = await response.json();
           setAuthorProjects(projects);
           localStorage.setItem(`authorProjects`, JSON.stringify(projects));
@@ -93,7 +93,7 @@ const DashboardPage = () => {
         }
 
         if (!collaboratorProjects) {
-          const response = await fetch(`http://localhost:4000/api/projects/collaborator/${sessionId}`);
+          const response = await fetch('${API_BASE_URL}/projects/collaborator/${sessionId}');
           const projects = await response.json();
           setCollaboratorProjects(projects);
           localStorage.setItem(`collaboratorProjects`, JSON.stringify(projects));

@@ -40,7 +40,7 @@ const CollaboratorProjectsList: React.FC<CollaboratorProjectsListProps> = ({ pro
   const fetchCollaboratorProjects = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:4000/api/projects/collaborator/${sessionId}`);
+      const response = await fetch('${API_BASE_URL}/projects/collaborator/${sessionId}');
       const projects = await response.json();
       setLocalProjects(projects);
       localStorage.setItem(`collaboratorProjects`, JSON.stringify(projects)); // Guarda en el localStorage

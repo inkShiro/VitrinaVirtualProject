@@ -45,7 +45,7 @@ const UploadProjectPage = () => {
 
     const fetchCategories = async () => {
       try {
-        const response = await fetch("http://localhost:4000/api/categories/");
+        const response = await fetch("${API_BASE_URL}/categories/");
         if (!response.ok) {
           throw new Error("Error al obtener las categorías");
         }
@@ -63,7 +63,7 @@ const UploadProjectPage = () => {
     setCollaboratorSearch(name);
     if (name.trim().length > 2) {
       try {
-        const usersResponse = await fetch("http://localhost:4000/api/users");
+        const usersResponse = await fetch("${API_BASE_URL}/users");
         const usersData = await usersResponse.json();
         const filteredUsers = usersData.filter(
           (user: { fullName: string; userType: string }) =>
@@ -72,7 +72,7 @@ const UploadProjectPage = () => {
 
         setFilteredUsers(filteredUsers);
 
-        const studentsResponse = await fetch("http://localhost:4000/api/students");
+        const studentsResponse = await fetch("${API_BASE_URL}/students");
         const studentsData = await studentsResponse.json();
 
         const fullFilteredUsers = filteredUsers.map((user: any) => {
@@ -97,7 +97,7 @@ const UploadProjectPage = () => {
   const handleCollaboratorSelect = async (collaborator: any) => {
     if (!collaborators.some((c) => c.id === collaborator.id)) {
       try {
-        const studentResponse = await fetch(`http://localhost:4000/api/students/user/${collaborator.id}`);
+        const studentResponse = await fetch('${API_BASE_URL}/students/user/${collaborator.id}');
         if (!studentResponse.ok) {
           throw new Error("Error al obtener los detalles del colaborador.");
         }
@@ -140,7 +140,7 @@ const UploadProjectPage = () => {
           formData.append("files", file);
         });
   
-        const uploadResponse = await fetch("http://localhost:4000/api/files/upload/multiple", {
+        const uploadResponse = await fetch("${API_BASE_URL}/files/upload/multiple", {
           method: "POST",
           body: formData,
         });
@@ -163,7 +163,7 @@ const UploadProjectPage = () => {
         files: fileDetails, // Si no hay archivos, fileDetails estará vacío
       };
   
-      const createProjectResponse = await fetch("http://localhost:4000/api/projects", {
+      const createProjectResponse = await fetch("${API_BASE_URL}/projects", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

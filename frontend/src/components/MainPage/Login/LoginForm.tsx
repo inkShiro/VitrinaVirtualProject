@@ -4,7 +4,7 @@ import Notification from '../../Efectos/Notification'; // Asegúrate de importar
 // Función para verificar el estado del módulo
 const checkModuleStatus = async () => {
   try {
-    const response = await fetch('http://localhost:4000/api/modules/status/Login', {
+    const response = await fetch('${API_BASE_URL}/modules/status/Login', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -38,7 +38,7 @@ export default function LoginForm() {
 
     // Hacer la solicitud a la API para iniciar sesión
     try {
-      const response = await fetch('http://localhost:4000/api/auth/login', {
+      const response = await fetch('${API_BASE_URL}/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

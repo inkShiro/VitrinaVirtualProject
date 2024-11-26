@@ -12,14 +12,15 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
   const [moduleStatus, setModuleStatus] = useState<{ [key: string]: string }>({});
 
   // Obtener el estado de los módulos desde la API
-  const fetchModuleStatus = async (module: string) => {
+  const fetchModuleStatus = async (mod: string) => {
     try {
-      const response = await fetch('http://localhost:4000/api/modules/status/Login', {
+      const response = await fetch('${API_BASE_URL}/modules/status/Login', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         }
-      });const data = await response.json();
+      });
+      const data = await response.json();
       return data.isActive ? 'online' : 'offline';
     } catch (error) {
       console.error('Error al obtener el estado del módulo:', error);
@@ -31,9 +32,9 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
   useEffect(() => {
     const initializeModules = async () => {
       const initialStatus: { [key: string]: string } = {};
-      for (const module of MODULES) {
-        const status = await fetchModuleStatus(module);
-        initialStatus[module] = status;
+      for (const mod of MODULES) {
+        const status = await fetchModuleStatus(mod);
+        initialStatus[mod] = status;
       }
       setModuleStatus(initialStatus);
     };
@@ -41,12 +42,12 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
   }, []);
 
   // Alternar el estado del módulo y actualizarlo en la API
-  const toggleModuleStatus = async (module: string) => {
-    const newStatus = moduleStatus[module] === 'online' ? 'offline' : 'online';
+  const toggleModuleStatus = async (mod: string) => {
+    const newStatus = moduleStatus[mod] === 'online' ? 'offline' : 'online';
 
     try {
       // Hacer la petición PATCH para actualizar el estado del módulo
-      await fetch(`http://localhost:4000/api/modules/status/${module}`, {
+      await fetch('${API_BASE_URL}/modules/status/${mod}', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -57,11 +58,11 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
       // Actualizar el estado en el componente
       setModuleStatus((prevState) => ({
         ...prevState,
-        [module]: newStatus,
+        [mod]: newStatus,
       }));
 
       // Log para el estado del módulo de "Inicio de Sesión y Registro"
-      if (module === 'Inicio de Sesión y Registro') {
+      if (mod === 'Inicio de Sesión y Registro') {
         if (newStatus === 'offline') {
           console.log('El módulo de Inicio de Sesión y Registro está desactivado');
         } else {
@@ -80,16 +81,16 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
         <p>Configuraciones para el administrador.</p>
 
         <div className="space-y-4">
-          {MODULES.map((module) => (
-            <div key={module} className="flex items-center justify-between">
-              <span>{module}</span>
+          {MODULES.map((mod) => (
+            <div key={mod} className="flex items-center justify-between">
+              <span>{mod}</span>
               <button
                 className={`px-4 py-2 rounded ${
-                  moduleStatus[module] === 'online' ? 'bg-green-500' : 'bg-gray-300'
+                  moduleStatus[mod] === 'online' ? 'bg-green-500' : 'bg-gray-300'
                 }`}
-                onClick={() => toggleModuleStatus(module)}
+                onClick={() => toggleModuleStatus(mod)}
               >
-                {moduleStatus[module] === 'online' ? 'On' : 'Off'}
+                {moduleStatus[mod] === 'online' ? 'On' : 'Off'}
               </button>
             </div>
           ))}

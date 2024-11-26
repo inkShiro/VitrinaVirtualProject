@@ -64,7 +64,7 @@ const AuthorProjectsList: React.FC<AuthorProjectsListProps> = ({ projects, sessi
   const handleReload = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:4000/api/projects/author/${sessionId}`);
+      const response = await fetch('${API_BASE_URL}/projects/author/${sessionId}');
       const updatedProjects = await response.json();
       setLocalProjects(updatedProjects);
       localStorage.setItem(`authorProjects`, JSON.stringify(updatedProjects));

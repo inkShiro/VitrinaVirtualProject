@@ -57,7 +57,7 @@ export default function RegisterForm() {
   // Función para verificar el estado del módulo
 const checkModuleStatus = async () => {
   try {
-    const response = await fetch('http://localhost:4000/api/modules/status/Login', {
+    const response = await fetch('${API_BASE_URL}/modules/status/Login', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -119,7 +119,7 @@ const handleSubmit = async (event: React.FormEvent) => {
 
   // Realizar la petición POST
   try {
-    const response = await fetch('http://localhost:4000/api/auth/register', {
+    const response = await fetch('${API_BASE_URL}/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -26,7 +26,7 @@ const ProjectList = () => {
 
       if (!cachedSessionId) {
         console.log("No se encontró sessionId en el localStorage, realizando fetch...");
-        const response = await fetch(`http://localhost:4000/api/students/user/${storedUserId}`);
+        const response = await fetch('${API_BASE_URL}/students/user/${storedUserId}');
         const data = await response.json();
         cachedSessionId = JSON.stringify(data.id);
         localStorage.setItem(`sessionId`, cachedSessionId);
@@ -51,7 +51,7 @@ const ProjectList = () => {
     const fetchData = async () => {
       try {
         if (!authorProjects) {
-          const response = await fetch(`http://localhost:4000/api/projects/author/${sessionId}`);
+          const response = await fetch('${API_BASE_URL}/projects/author/${sessionId}');
           const projects = await response.json();
           setAuthorProjects(projects);
           localStorage.setItem(`authorProjects`, JSON.stringify(projects));
@@ -59,7 +59,7 @@ const ProjectList = () => {
         }
 
         if (!collaboratorProjects) {
-          const response = await fetch(`http://localhost:4000/api/projects/collaborator/${sessionId}`);
+          const response = await fetch('${API_BASE_URL}/projects/collaborator/${sessionId}');
           const projects = await response.json();
           setCollaboratorProjects(projects);
           localStorage.setItem(`collaboratorProjects`, JSON.stringify(projects));
