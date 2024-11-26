@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 interface AdminPanelProps {
   onClose: () => void;
 }
@@ -12,21 +14,23 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ onClose }) => {
   const [moduleStatus, setModuleStatus] = useState<{ [key: string]: string }>({});
 
   // Obtener el estado de los módulos desde la API
-  const fetchModuleStatus = async (mod: string) => {
-    try {
-      const response = await fetch('${API_BASE_URL}/modules/status/Login', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      const data = await response.json();
-      return data.isActive ? 'online' : 'offline';
-    } catch (error) {
-      console.error('Error al obtener el estado del módulo:', error);
-      return DEFAULT_STATUS; // Si hay un error, se retorna el estado por defecto
-    }
-  };
+const fetchModuleStatus = async (mod: string) => {
+  try {
+    // Usar comillas invertidas para interpolar la variable API_BASE_URL
+    const response = await fetch(`${API_BASE_URL}/modules/status/Login`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    const data = await response.json();
+    return data.isActive ? 'online' : 'offline';
+  } catch (error) {
+    console.error('Error al obtener el estado del módulo:', error);
+    return DEFAULT_STATUS; // Si hay un error, se retorna el estado por defecto
+  }
+};
+
 
   // Inicializar el estado de los módulos al cargar el componente
   useEffect(() => {
