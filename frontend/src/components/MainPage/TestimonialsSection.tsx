@@ -13,13 +13,13 @@ export default function TestimonialsSection() {
               &quot;Gracias a esta plataforma, pude conectar con una empresa que estaba buscando proyectos académicos en mi área de estudio. Mi portafolio fue clave para conseguir mi primer empleo.&quot;
             </p>
             <div className="flex items-center justify-center">
-              <Image
+              {/* <Image
                 src="https://via.placeholder.com/50"
                 alt="Estudiante"
                 width={50}
                 height={50}
                 className="rounded-full mr-4"
-              />
+              /> */}
               <div>
                 <p className="font-semibold">Ana Pérez</p>
                 <p className="text-gray-500">Estudiante de Ingeniería de Software</p>
@@ -33,13 +33,13 @@ export default function TestimonialsSection() {
               &quot;La plataforma nos permitió encontrar proyectos innovadores para colaborar con estudiantes talentosos. Ha sido una gran herramienta para identificar futuros talentos para nuestra empresa.&quot;
             </p>
             <div className="flex items-center justify-center">
-              <Image
+              {/* <Image
                 src="https://via.placeholder.com/50"
                 alt="Empresa"
                 width={50}
                 height={50}
                 className="rounded-full mr-4"
-              />
+              /> */}
               <div>
                 <p className="font-semibold">Carlos López</p>
                 <p className="text-gray-500">Director de Innovación, TechSolutions</p>
@@ -53,13 +53,13 @@ export default function TestimonialsSection() {
               &quot;Me encantó poder filtrar los proyectos y encontrar exactamente lo que buscaba. Además, el portafolio me permitió mostrar mis habilidades de manera efectiva.&quot;
             </p>
             <div className="flex items-center justify-center">
-              <Image
+              {/* <Image
                 src="https://via.placeholder.com/50"
                 alt="Estudiante"
                 width={50}
                 height={50}
                 className="rounded-full mr-4"
-              />
+              /> */}
               <div>
                 <p className="font-semibold">Javier Rodríguez</p>
                 <p className="text-gray-500">Estudiante de Diseño Gráfico</p>

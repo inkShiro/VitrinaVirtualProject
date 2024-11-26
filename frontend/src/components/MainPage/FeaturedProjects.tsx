@@ -9,7 +9,7 @@ export default function FeaturedProjects() {
         <div className="flex flex-wrap justify-center space-x-4">
           {[1, 2, 3].map((project) => (
             <div key={project} className="max-w-xs bg-gray-100 p-4 rounded-lg shadow">
-              <Image src={`/project-${project}.jpg`} alt={`Proyecto ${project}`} width={300} height={200} />
+              {/* <Image src={`/project-${project}.jpg`} alt={`Proyecto ${project}`} width={300} height={200} /> */}
               <h3 className="text-xl font-semibold mt-4">Título del Proyecto {project}</h3>
               <p className="text-gray-600 mt-2">Breve descripción del proyecto.</p>
             </div>

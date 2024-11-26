@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,6 +6,7 @@ datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
 model User {
   id                Int      @id @default(autoincrement())
   email             String   @unique
@@ -19,6 +17,9 @@ model User {
   updatedAt         DateTime @updatedAt
   studentProfile    Student? // Relación opcional a perfil de estudiante
   companyProfile    Company? // Relación opcional a perfil de empresa
+  chats             Chat[]   @relation("ChatUsers") // Relación con chats
+  sentMessages      Message[] @relation("SenderMessages") // Relación con mensajes enviados
+  receivedMessages  Message[] @relation("ReceiverMessages") // Relación con mensajes recibidos
 }
 
 model Student {
@@ -31,7 +32,14 @@ model Student {
   location          String
   birthDate         DateTime?
   portfolioUrl      String?  // Opcional
+  profilePicture    String?  // URL de la foto de perfil
   user              User     @relation(fields: [userId], references: [id])
+
+  // Relación uno a muchos con los proyectos del estudiante
+  projects          Project[]
+
+  // Relación con los proyectos como colaboradores
+  collaborations    Project[] @relation("CollaboratorProjects")
 
   @@map("students")
 }
@@ -49,4 +57,71 @@ model Company {
   user               User     @relation(fields: [userId], references: [id])
 
   @@map("companies")
+}
+
+model Project {
+  id               Int      @id @default(autoincrement())
+  title            String   // Título del proyecto
+  description      String   // Descripción del proyecto
+  privacy          Boolean  // Privacidad del proyecto (público o privado)
+  license          String   // Licencia del proyecto
+  createdAt        DateTime @default(now())   // Fecha de creación
+  updatedAt        DateTime @updatedAt        // Fecha de última actualización
+
+  // Relación con el estudiante que sube el proyecto (autor)
+  authorId         Int
+  author           Student  @relation(fields: [authorId], references: [id])
+
+  // Relación con colaboradores
+  collaborators    Student[] @relation("CollaboratorProjects")
+
+  // Relación con categorías
+  categories       Category[] @relation("ProjectCategories")
+
+  // Relación con los archivos
+  files            File[]    // Relación con archivos (modelo intermedio)
+}
+
+model File {
+  id         Int      @id @default(autoincrement())
+  fileUrl    String   // URL del archivo (por ejemplo, imagen o zip)
+  projectId  Int
+  project    Project  @relation(fields: [projectId], references: [id])
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique // Nombre de la categoría (por ejemplo, 'Tecnología', 'Educación')
+  projects  Project[] @relation("ProjectCategories") // Relación con los proyectos
+
+  @@map("categories")
+}
+
+model ModuleStatus {
+  id        Int      @id @default(autoincrement())
+  moduleName String  @unique // Nombre del módulo, por ejemplo, 'register' o 'login'
+  isActive   Boolean @default(false) // Estado del módulo (activo/inactivo)
+  updatedAt  DateTime @updatedAt      // Fecha de última actualización
+
+  @@map("module_status")
+}
+
+model Chat {
+  id        Int        @id @default(autoincrement())
+  users     User[]     @relation("ChatUsers")
+  messages  Message[]  @relation("ChatMessages")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  senderId  Int
+  receiverId Int
+  chatId    Int
+  sender    User     @relation("SenderMessages", fields: [senderId], references: [id])
+  receiver  User     @relation("ReceiverMessages", fields: [receiverId], references: [id])
+  chat      Chat     @relation("ChatMessages", fields: [chatId], references: [id])
+  createdAt DateTime @default(now())
 }
