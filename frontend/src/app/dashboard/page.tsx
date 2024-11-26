@@ -6,6 +6,8 @@ import CollaboratorProjectsList from '../../components/Dashboard/Students/Collab
 import AuthorProjectsList from '../../components/Dashboard/Students/AuthorProjectsList';
 import LoadingSpinner from '@/components/Efectos/LoadingSpinner';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 const DashboardPage = () => {
   const [userType, setUserType] = useState<"Estudiante" | "Empresa">("Estudiante");
   const [studentData, setStudentData] = useState<any>(null);
@@ -47,7 +49,7 @@ const DashboardPage = () => {
 
     if (!cachedSessionId) {
       console.log("No se encontró sessionId en el localStorage, realizando fetch...");
-      const response = await fetch('${API_BASE_URL}/students/user/${userId}');
+      const response = await fetch(`${API_BASE_URL}/students/user/${userId}`);
       const data = await response.json();
       cachedSessionId = JSON.stringify(data.id);
       localStorage.setItem(`sessionId`, cachedSessionId);
@@ -67,7 +69,7 @@ const DashboardPage = () => {
     const fetchData = async () => {
       try {
         if (!studentData) {
-          const response = await fetch('${API_BASE_URL}/students/user/${userId}');
+          const response = await fetch(`${API_BASE_URL}/students/user/${userId}`);
           const data = await response.json();
           setStudentData(data);
           setSessionId(data.id);
@@ -77,7 +79,7 @@ const DashboardPage = () => {
         }
 
         if (!additionalData) {
-          const response = await fetch('${API_BASE_URL}/users/${userId}');
+          const response = await fetch(`${API_BASE_URL}/users/${userId}`);
           const data = await response.json();
           setAdditionalData(data);
           localStorage.setItem(`additionalData`, JSON.stringify(data));
@@ -85,7 +87,7 @@ const DashboardPage = () => {
         }
 
         if (!authorProjects) {
-          const response = await fetch('${API_BASE_URL}/projects/author/${sessionId}');
+          const response = await fetch(`${API_BASE_URL}/projects/author/${sessionId}`);
           const projects = await response.json();
           setAuthorProjects(projects);
           localStorage.setItem(`authorProjects`, JSON.stringify(projects));
@@ -93,7 +95,7 @@ const DashboardPage = () => {
         }
 
         if (!collaboratorProjects) {
-          const response = await fetch('${API_BASE_URL}/projects/collaborator/${sessionId}');
+          const response = await fetch(`${API_BASE_URL}/projects/collaborator/${sessionId}`);
           const projects = await response.json();
           setCollaboratorProjects(projects);
           localStorage.setItem(`collaboratorProjects`, JSON.stringify(projects));

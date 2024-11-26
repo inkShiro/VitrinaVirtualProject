@@ -4,6 +4,8 @@ import { ProjectCard } from './ProjectCard';
 import { FaTh, FaList, FaSync } from 'react-icons/fa';
 import { useRouter } from 'next/navigation';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 interface Project {
   id: number;
   title: string;
@@ -64,7 +66,7 @@ const AuthorProjectsList: React.FC<AuthorProjectsListProps> = ({ projects, sessi
   const handleReload = async () => {
     setLoading(true);
     try {
-      const response = await fetch('${API_BASE_URL}/projects/author/${sessionId}');
+      const response = await fetch(`${API_BASE_URL}/projects/author/${sessionId}`);
       const updatedProjects = await response.json();
       setLocalProjects(updatedProjects);
       localStorage.setItem(`authorProjects`, JSON.stringify(updatedProjects));

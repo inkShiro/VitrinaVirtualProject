@@ -51,7 +51,7 @@ const fetchModuleStatus = async (mod: string) => {
 
     try {
       // Hacer la petición PATCH para actualizar el estado del módulo
-      await fetch('${API_BASE_URL}/modules/status/${mod}', {
+      await fetch(`${API_BASE_URL}/modules/status/${mod}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

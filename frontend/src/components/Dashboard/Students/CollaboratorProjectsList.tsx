@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { FaTh, FaList, FaSync } from 'react-icons/fa';
 import { ProjectCard } from './ProjectCard';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 interface Project {
   id: number;
   title: string;
@@ -40,7 +42,7 @@ const CollaboratorProjectsList: React.FC<CollaboratorProjectsListProps> = ({ pro
   const fetchCollaboratorProjects = async () => {
     setLoading(true);
     try {
-      const response = await fetch('${API_BASE_URL}/projects/collaborator/${sessionId}');
+      const response = await fetch(`${API_BASE_URL}/projects/collaborator/${sessionId}`);
       const projects = await response.json();
       setLocalProjects(projects);
       localStorage.setItem(`collaboratorProjects`, JSON.stringify(projects)); // Guarda en el localStorage

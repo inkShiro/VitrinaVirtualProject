@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import Notification from '../../Efectos/Notification'; // Asegúrate de importar el componente de notificación
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 // Función para verificar el estado del módulo
 const checkModuleStatus = async () => {
   try {
-    const response = await fetch('${API_BASE_URL}/modules/status/Login', {
+    const response = await fetch(`${API_BASE_URL}/modules/status/Login`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -38,7 +40,7 @@ export default function LoginForm() {
 
     // Hacer la solicitud a la API para iniciar sesión
     try {
-      const response = await fetch('${API_BASE_URL}/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

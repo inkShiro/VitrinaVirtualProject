@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import FileViewer from '@/components/Dashboard/projects/FileViewer';
 import { useRouter } from 'next/navigation';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 interface Project {
   id: string;
   title: string;
@@ -63,7 +65,7 @@ const ProjectDetailsContent: React.FC<ProjectDetailsContentProps> = ({
   useEffect(() => {
     const fetchAuthorName = async () => {
       try {
-        const userResponse = await fetch('${API_BASE_URL}/users/${project.author.userId}');
+        const userResponse = await fetch(`${API_BASE_URL}/users/${project.author.userId}`);
         const userData = await userResponse.json();
 
         if (userData && userData.fullName) {
@@ -85,7 +87,7 @@ const ProjectDetailsContent: React.FC<ProjectDetailsContentProps> = ({
       }[] = [];
       try {
         for (const collaborator of project.collaborators) {
-          const userResponse = await fetch('${API_BASE_URL}/users/${collaborator.userId}');
+          const userResponse = await fetch(`${API_BASE_URL}/users/${collaborator.userId}`);
           const userData = await userResponse.json();
 
           if (userData && userData.fullName) {

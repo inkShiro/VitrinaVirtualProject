@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import Notification from '../../Efectos/Notification'; // Asegúrate de que la ruta a Notification sea correcta
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 export default function RegisterForm() {
   const [isChecked, setIsChecked] = useState(false);
   const [password, setPassword] = useState('');
@@ -57,7 +59,7 @@ export default function RegisterForm() {
   // Función para verificar el estado del módulo
 const checkModuleStatus = async () => {
   try {
-    const response = await fetch('${API_BASE_URL}/modules/status/Login', {
+    const response = await fetch(`${API_BASE_URL}/modules/status/Login`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -119,7 +121,7 @@ const handleSubmit = async (event: React.FormEvent) => {
 
   // Realizar la petición POST
   try {
-    const response = await fetch('${API_BASE_URL}/auth/register', {
+    const response = await fetch(`${API_BASE_URL}/auth/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

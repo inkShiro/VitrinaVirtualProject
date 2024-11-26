@@ -14,6 +14,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import FileViewer from "@/components/Dashboard/projects/FileViewer";
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 interface Author {
   id: number;
   userId: number;
@@ -89,7 +91,7 @@ const UploadProjectPage = () => {
     }
     const fetchCategories = async () => {
       try {
-        const response = await fetch("${API_BASE_URL}/categories/");
+        const response = await fetch(`${API_BASE_URL}/categories/`);
         if (!response.ok) {
           throw new Error("Error al obtener las categorías");
         }
@@ -114,7 +116,7 @@ const UploadProjectPage = () => {
       if (!projectId) {
         throw new Error("El ID del proyecto no está definido.");
       }
-      const url = '${API_BASE_URL}/projects/${projectId}';
+      const url = `${API_BASE_URL}/projects/${projectId}`;
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -175,7 +177,7 @@ const UploadProjectPage = () => {
 
   const deleteFileFromApi = async (fileId: string) => {
     try {
-      const response = await fetch('${API_BASE_URL}/files/${fileId}', {
+      const response = await fetch(`${API_BASE_URL}/files/${fileId}`, {
         method: 'DELETE',
       });
       if (response.ok) {
@@ -191,7 +193,7 @@ const UploadProjectPage = () => {
   
   const fetchUserData = async (userId: any) => {
     try {
-      const url = '${API_BASE_URL}/users/${userId}';
+      const url = `${API_BASE_URL}/users/${userId}`;
       const response = await fetch(url, {
         method: "GET",
         headers: {
@@ -212,13 +214,13 @@ const UploadProjectPage = () => {
     setCollaboratorSearch(name);
     if (name.trim().length > 2) {
       try {
-        const usersResponse = await fetch("${API_BASE_URL}/users");
+        const usersResponse = await fetch(`${API_BASE_URL}/users`);
         const usersData = await usersResponse.json();
         const filteredUsers = usersData.filter(
           (user: { fullName: string; userType: string }) =>
             user.userType === "student" && user.fullName.toLowerCase().includes(name.toLowerCase())
         );
-        const studentsResponse = await fetch("${API_BASE_URL}/students");
+        const studentsResponse = await fetch(`${API_BASE_URL}/students`);
         const studentsData = await studentsResponse.json();
         const fullFilteredUsers = filteredUsers.map((user: any) => {
           const studentData = studentsData.find((student: { userId: string }) => student.userId === user.id);
@@ -250,7 +252,7 @@ const UploadProjectPage = () => {
       return [...prevCollaborators, collaborator];
     });
     try {
-      const studentResponse = await fetch('${API_BASE_URL}/students/user/${collaborator.id}');
+      const studentResponse = await fetch(`${API_BASE_URL}/students/user/${collaborator.id}`);
       if (!studentResponse.ok) {
         throw new Error("Error al obtener los detalles del colaborador.");
       }
@@ -283,7 +285,7 @@ const UploadProjectPage = () => {
         files.forEach((file) => {
           formData.append("files", file);
         });
-        const uploadResponse = await fetch("${API_BASE_URL}/files/upload/multiple", {
+        const uploadResponse = await fetch(`${API_BASE_URL}/files/upload/multiple`, {
           method: "POST",
           body: formData,
         });
@@ -302,7 +304,7 @@ const UploadProjectPage = () => {
         id: parseInt(Array.isArray(id) ? id[0] : id, 10),  // Convertimos el id a entero
         ...(fileDetails.length > 0 && { files: fileDetails }), // Solo añade files si fileDetails no está vacío
       };
-      const createProjectResponse = await fetch('${API_BASE_URL}/projects/${projectDataWithFiles.id}', {
+      const createProjectResponse = await fetch(`${API_BASE_URL}/projects/${projectDataWithFiles.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

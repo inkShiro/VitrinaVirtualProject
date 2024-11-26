@@ -5,6 +5,8 @@ import Sidebar from '../../../../components/Dashboard/Sidebar';
 import LoadingSpinner from '../../../../components/Efectos/LoadingSpinner';
 import ProjectDetailsContent from '../../../../components/Dashboard/ProjectDetailsContent';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 interface Project {
   id: string;
   title: string;
@@ -66,7 +68,7 @@ const ProjectDetails: React.FC = () => {
   const fetchProjectDetails = async (projectId: string) => {
     try {
       setLoading(true);
-      const response = await fetch('${API_BASE_URL}/projects/${projectId}');
+      const response = await fetch(`${API_BASE_URL}/projects/${projectId}`);
       if (!response.ok) {
         throw new Error('Proyecto no encontrado');
       }
@@ -118,7 +120,7 @@ const ProjectDetails: React.FC = () => {
   const fetchUserNames = async (users: { userId: string }[]) => {
     try {
       const userIds = users.map(user => user.userId);
-      const response = await fetch("${API_BASE_URL}/users?ids=${userIds.join(',')}");
+      const response = await fetch(`${API_BASE_URL}/users?ids=${userIds.join(',')}`);
 
       const userData = await response.json();
 
