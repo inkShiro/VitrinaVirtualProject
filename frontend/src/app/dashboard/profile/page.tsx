@@ -13,7 +13,7 @@ const ProfilePage = () => {
   useEffect(() => {
     // Obtener el tipo de usuario desde localStorage
     const storedUserType = localStorage.getItem("accountType");
-    if (storedUserType === "estudiante" || storedUserType === "empresa") {
+    if (storedUserType === "estudiante" || storedUserType === "company") {
       setUserType(storedUserType);
     }
   }, []);
@@ -44,7 +44,8 @@ const ProfilePage = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
+      {/* Sidebar condicional según el tipo de usuario */}
+      <Sidebar empresa_view={userType === "company"} />
 
       <div className="flex-1 flex flex-col items-center p-8">
         <h1 className="text-3xl font-bold mb-8">Mi Perfil</h1>

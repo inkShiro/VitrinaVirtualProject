@@ -38,45 +38,54 @@ export default function LoginForm() {
       return;
     }
 
-    // Hacer la solicitud a la API para iniciar sesión
     try {
       const response = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
-
+    
       const data = await response.json();
-
+    
       if (response.ok) {
         localStorage.clear();
-        // Almacenar el access_token y el id del usuario
-        localStorage.setItem('access_token', data.access_token); // Asumimos que la API devuelve el access_token
-        localStorage.setItem('user_id', data.user_id); // Asumimos que la API devuelve el id del usuario
-
-        // Almacenar el tipo de cuenta y redirigir
-        localStorage.setItem('accountType', "Estudiante");
-        console.log(localStorage.getItem('accountType'));
-        console.log(localStorage.getItem('access_token'));
-        console.log(localStorage.getItem('user_id'));
-         // Asumimos que la API devuelve el tipo de cuenta
-        window.location.href = '/dashboard';
+    
+        // Almacenar el token de acceso y el id del usuario
+        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('user_id', data.user_id);
+    
+        // Verificar el tipo de perfil para redirigir correctamente
+        const accountType = data.profile_type; // Asumimos que la API devuelve el tipo de perfil en "profile_type"
+        localStorage.setItem('accountType', accountType); // Guardar el tipo de cuenta en localStorage
+    
+        console.log('Account Type:', accountType);
+        console.log('Access Token:', localStorage.getItem('access_token'));
+        console.log('User ID:', localStorage.getItem('user_id'));
+    
+        // Redirigir según el tipo de cuenta
+        if (accountType === 'company') {
+          window.location.href = '/dashboard_empresa';
+        } else if (accountType === 'student') {
+          window.location.href = '/dashboard';
+        } else {
+          throw new Error('Tipo de cuenta no reconocido');
+        }
       } else {
         // Si hay un error en la autenticación
         setNotification({
           message: data.message || 'Hubo un error al iniciar sesión.',
-          type: 'error'
+          type: 'error',
         });
       }
     } catch (error) {
       console.error('Error durante el inicio de sesión:', error);
       setNotification({
         message: 'Hubo un problema al conectar con el servidor.',
-        type: 'error'
+        type: 'error',
       });
-    }
+    }    
   };
 
   // Función para cerrar la notificación

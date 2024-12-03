@@ -79,25 +79,49 @@ export class AuthService {
       throw new BadRequestException('El correo electrónico y la contraseña son obligatorios');
     }
   
-    const user = await this.prisma.user.findUnique({ where: { email } });
+    // Buscar al usuario por email
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      include: {
+        studentProfile: true, // Incluir perfil de estudiante
+        companyProfile: true, // Incluir perfil de empresa
+      },
+    });
+  
     if (!user) {
       throw new UnauthorizedException('Credenciales no válidas');
     }
   
+    // Verificar la contraseña
     const passwordValid = await bcrypt.compare(password, user.password);
     if (!passwordValid) {
       throw new UnauthorizedException('Credenciales no válidas');
     }
   
-    // Generar el token e incluir el id del usuario
-    const token = await this.generateToken(user);
+    // Generar token
+    const token = this.generateToken(user);
   
-    // Retornar el token y el id del usuario
+    // Preparar datos adicionales según el tipo de cuenta
+    let profileType = null;
+    let profileData = null;
+  
+    if (user.studentProfile) {
+      profileType = 'student';
+      profileData = user.studentProfile;
+    } else if (user.companyProfile) {
+      profileType = 'company';
+      profileData = user.companyProfile;
+    }
+  
+    // Retornar token, ID del usuario, tipo de cuenta y datos del perfil
     return {
-      access_token: token,
-      user_id: user.id, // Incluyendo el id del usuario
+      access_token: token.access_token,
+      user_id: user.id,
+      profile_type: profileType,
+      profile_data: profileData, // Datos del perfil (puedes omitirlo si no es necesario)
     };
   }
+  
   
 
   private generateToken(user: any) {

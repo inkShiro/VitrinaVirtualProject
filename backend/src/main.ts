@@ -1,6 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,12 +24,21 @@ async function bootstrap() {
     SwaggerModule.setup('api', app, document);
   }
 
-  // Habilitar CORS
-  app.enableCors();
+  // Habilitar CORS para todos los orígenes
+  app.enableCors({
+    origin: true, // Permitir todas las direcciones
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Métodos permitidos
+    allowedHeaders: ['Content-Type', 'Authorization'], // Encabezados permitidos
+    credentials: true, // Permitir envío de cookies o credenciales
+  });
+
+  // Usar IoAdapter para WebSocket
+  app.useWebSocketAdapter(new IoAdapter(app));
 
   // Escuchar en el puerto adecuado
   await app.listen(port, () => {
     console.log(`Application is running on: http://localhost:${port}`);
   });
 }
+
 bootstrap();

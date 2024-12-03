@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ChatService } from './chat.service';
+import { ChatController } from './chat.controller';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatGateway } from './chat.gateway';
-import { Chat } from './entities/chat.entity';
-import { Message } from './entities/message.entity';
-import { User } from './entities/user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Chat, Message, User])],
-  providers: [ChatService, ChatGateway],
-  exports: [ChatService],
+  imports: [], // Si tu módulo depende de otros módulos, los importas aquí
+  providers: [ChatService, PrismaService, ChatGateway],
+  exports: [ChatService], // Exponemos solo el servicio si no es necesario exportar el Gateway
+  controllers: [ChatController],
 })
 export class ChatModule {}

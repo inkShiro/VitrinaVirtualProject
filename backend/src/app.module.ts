@@ -12,9 +12,6 @@ import { FileModule } from './file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { ChatModule } from './chat/chat.module';
-import { Chat } from './chat/entities/chat.entity';
-import { Message } from './chat/entities/message.entity';
-import { User } from './chat/entities/user.entity';
 
 @Module({
   imports: [
@@ -32,7 +29,6 @@ import { User } from './chat/entities/user.entity';
     TypeOrmModule.forRoot({
       type: 'sqlite', // Cambia esto según tu base de datos
       database: 'database.sqlite', // Archivo SQLite
-      entities: [Chat, Message, User], // Asegúrate de incluir las entidades
       synchronize: true, // Sincronización automática de esquemas (desactiva en producción)
     }),
     // Configuración para servir archivos estáticos desde la carpeta 'uploads'

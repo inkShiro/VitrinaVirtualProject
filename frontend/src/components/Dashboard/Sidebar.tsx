@@ -6,21 +6,20 @@ import {
   FaSignOutAlt,
   FaTachometerAlt,
   FaUpload,
-  FaList,
+  FaSearch ,
   FaComments,
+  FaList,
 } from "react-icons/fa";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
-const Sidebar = () => {
+interface SidebarProps {
+  empresa_view?: boolean;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ empresa_view = false }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isHomeVisible, setIsHomeVisible] = useState(false);
-  const [isUploadVisible, setIsUploadVisible] = useState(false);
-  const [isListVisible, setIsListVisible] = useState(false);
-  const [isChatVisible, setIsChatVisible] = useState(false);
-  const [isProfileVisible, setIsProfileVisible] = useState(false);
-  const [isLogoutVisible, setIsLogoutVisible] = useState(false);
-  const router = useRouter();
+  const [visibleItems, setVisibleItems] = useState<boolean[]>([false, false, false, false, false, false]);
+  const isEmpresaView = empresa_view;
 
   useEffect(() => {
     const savedExpandedState = localStorage.getItem("sidebarExpanded");
@@ -28,11 +27,6 @@ const Sidebar = () => {
       setIsExpanded(JSON.parse(savedExpandedState));
     }
   }, []);
-
-  const handleLogout = () => {
-    localStorage.clear(); // Limpia todo el contenido de localStorage
-    window.location.href = "/"; // Redirige y recarga la página de inicio
-  };
 
   const toggleSidebar = () => {
     const newExpandedState = !isExpanded;
@@ -42,21 +36,16 @@ const Sidebar = () => {
 
   useEffect(() => {
     if (isExpanded) {
-      setTimeout(() => setIsHomeVisible(true), 200);
-      setTimeout(() => setIsUploadVisible(true), 250);
-      setTimeout(() => setIsListVisible(true), 300);
-      setTimeout(() => setIsChatVisible(true), 350);
-      setTimeout(() => setIsProfileVisible(true), 400);
-      setTimeout(() => setIsLogoutVisible(true), 450);
+      setVisibleItems([true, true, true, true, true, true]);
     } else {
-      setIsHomeVisible(false);
-      setIsUploadVisible(false);
-      setIsListVisible(false);
-      setIsChatVisible(false);
-      setIsProfileVisible(false);
-      setIsLogoutVisible(false);
+      setVisibleItems([false, false, false, false, false, false]);
     }
   }, [isExpanded]);
+
+  const handleLogout = () => {
+    localStorage.clear();
+    window.location.href = "/";
+  };
 
   return (
     <div
@@ -68,7 +57,7 @@ const Sidebar = () => {
         <div className="flex items-center justify-center mb-8">
           {isExpanded ? (
             <h1 className="text-2xl font-bold transition-opacity duration-300 ease-in-out opacity-100">
-              Dashboard
+              {isEmpresaView ? "Empresa" : "Dashboard"}
             </h1>
           ) : (
             <FaTachometerAlt className="text-3xl" />
@@ -76,66 +65,76 @@ const Sidebar = () => {
         </div>
 
         <nav className="space-y-2">
-          {/* Botón Inicio */}
-          <Link
-            href="/dashboard"
-            className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
-          >
-            <FaHome className="text-3xl" />
-            {isExpanded && isHomeVisible && <span className="ml-3">Inicio</span>}
-          </Link>
+          {/* Botones específicos de estudiante */}
+          {!isEmpresaView && (
+            <>
+              <Link
+                href="/dashboard"
+                className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
+              >
+                <FaHome className="text-3xl" />
+                {isExpanded && visibleItems[0] && <span className="ml-3">Inicio</span>}
+              </Link>
+              <Link
+                href="/dashboard/upload_projects"
+                className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
+              >
+                <FaUpload className="text-3xl" />
+                {isExpanded && visibleItems[1] && <span className="ml-3">Subir Proyecto</span>}
+              </Link>
+              <Link
+                href="/dashboard/projects"
+                className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
+              >
+                <FaList className="text-3xl" />
+                {isExpanded && visibleItems[2] && <span className="ml-3">Lista de Proyectos</span>}
+              </Link>
+              <Link
+                href="/dashboard_empresa/chat_empresa"
+                className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
+              >
+                <FaComments className="text-3xl" />
+                {isExpanded && visibleItems[3] && <span className="ml-3">Chat</span>}
+              </Link>
+            </>
+          )}
 
-          {/* Botón Subir Proyecto */}
-          <Link
-            href="/dashboard/upload_projects"
-            className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
-          >
-            <FaUpload className="text-3xl" />
-            {isExpanded && isUploadVisible && (
-              <span className="ml-3">Subir Proyecto</span>
-            )}
-          </Link>
+          {/* Botones específicos de empresa */}
+          {isEmpresaView && (
+            <>
+              <Link
+                href="/dashboard_empresa"
+                className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
+              >
+                <FaHome className="text-3xl" />
+                {isExpanded && visibleItems[0] && <span className="ml-3">Inicio</span>}
+              </Link>
+              <Link
+                href="/dashboard_empresa/explore_proyects"
+                className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
+              >
+                <FaSearch className="text-3xl" /> {/* Cambié el icono al de una lupa */}
+                {isExpanded && visibleItems[2] && <span className="ml-3">Explorar Proyectos</span>}
+              </Link>
+              <Link
+                href="/dashboard_empresa/chat_empresa"
+                className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
+              >
+                <FaComments className="text-3xl" /> {/* Cambiado a icono de chat */}
+                {isExpanded && visibleItems[1] && <span className="ml-3">Chat</span>} {/* Cambiado el texto a "Chat" */}
+              </Link>
+            </>
+          )}
 
-          {/* Botón Lista de Proyectos */}
-          <Link
-            href="/dashboard/projects"
-            className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
-          >
-            <FaList className="text-3xl" />
-            {isExpanded && isListVisible && (
-              <span className="ml-3">Lista de Proyectos</span>
-            )}
-          </Link>
+          
 
-          {/* Botón Chat */}
-          <Link
-            href="/dashboard/chat"
-            className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
-          >
-            <FaComments className="text-3xl" />
-            {isExpanded && isChatVisible && <span className="ml-3">Chat</span>}
-          </Link>
-
-          {/* Botón Perfil */}
-          <Link
-            href="/dashboard/profile"
-            className="flex items-center p-2 rounded hover:bg-gray-700 transition-all duration-500 ease-in-out"
-          >
-            <FaUserCircle className="text-3xl" />
-            {isExpanded && isProfileVisible && (
-              <span className="ml-3">Perfil</span>
-            )}
-          </Link>
-
-          {/* Botón Cerrar Sesión */}
+          {/* Botón Cerrar Sesión (común) */}
           <button
             onClick={handleLogout}
             className="flex items-center p-2 rounded hover:bg-gray-700 w-full text-left transition-all duration-500 ease-in-out"
           >
             <FaSignOutAlt className="text-3xl" />
-            {isExpanded && isLogoutVisible && (
-              <span className="ml-3">Cerrar sesión</span>
-            )}
+            {isExpanded && visibleItems[5] && <span className="ml-3">Cerrar sesión</span>}
           </button>
         </nav>
 

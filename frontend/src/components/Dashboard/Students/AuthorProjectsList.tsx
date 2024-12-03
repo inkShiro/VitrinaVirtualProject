@@ -19,9 +19,10 @@ interface AuthorProjectsListProps {
   sessionId: string;
   userId: string;
   mode: 'simple' | 'complete'; // Modo simple o completo
+  company?: boolean; // Parámetro opcional para la empresa
 }
 
-const AuthorProjectsList: React.FC<AuthorProjectsListProps> = ({ projects, sessionId: sessionId, userId, mode }) => {
+const AuthorProjectsList: React.FC<AuthorProjectsListProps> = ({ projects, sessionId, userId, mode, company }) => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [currentPage, setCurrentPage] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
@@ -66,7 +67,13 @@ const AuthorProjectsList: React.FC<AuthorProjectsListProps> = ({ projects, sessi
   const handleReload = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${API_BASE_URL}/projects/author/${sessionId}`);
+      let fetchUrl = `${API_BASE_URL}/projects/`;
+      
+      if (!company) {
+        fetchUrl = `${API_BASE_URL}/projects/author/${sessionId}`;
+      }
+
+      const response = await fetch(fetchUrl);
       const updatedProjects = await response.json();
       setLocalProjects(updatedProjects);
       localStorage.setItem(`authorProjects`, JSON.stringify(updatedProjects));

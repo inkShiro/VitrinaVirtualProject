@@ -42,7 +42,8 @@ interface ProjectDetailsContentProps {
   project: Project;
   canEdit: boolean;
   canView: boolean;
-  onEdit: () => void;
+  onEdit: () => void;  // Agregamos userType como prop
+  companyView?: boolean;  // Prop opcional para mostrar el botón de contactar
 }
 
 const ProjectDetailsContent: React.FC<ProjectDetailsContentProps> = ({
@@ -50,9 +51,12 @@ const ProjectDetailsContent: React.FC<ProjectDetailsContentProps> = ({
   canEdit,
   canView,
   onEdit,
+  companyView,  // Definimos el valor por defecto como false
 }) => {
 
   const router = useRouter(); // Importamos el hook de navegación
+
+  const [userId, setUserId] = useState<string | null>(null);
 
   const [collaborators, setCollaborators] = useState<{
     userId: string;
@@ -62,7 +66,52 @@ const ProjectDetailsContent: React.FC<ProjectDetailsContentProps> = ({
   }[]>([]);
   const [authorName, setAuthorName] = useState<string>('');
 
+  const handleContactClick = async () => {
+    try {
+      // Verificar si el userId está presente y convertirlo a número entero
+      if (!userId) {
+        console.error('No user ID found');
+        return;
+      }
+  
+      const userIdInt = parseInt(userId, 10); // Convertir userId a entero
+  
+      // Verificar si la conversión fue exitosa
+      if (isNaN(userIdInt)) {
+        console.error('Invalid user ID');
+        return;
+      }
+  
+      console.log(userIdInt); // Ver el userId convertido
+      console.log(project.author.userId);
+  
+      const response = await fetch(`${API_BASE_URL}/chats/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user1Id: userIdInt, // ID del usuario actual como número
+          user2Id: project.author.userId, // ID del autor del proyecto
+        }),
+      });
+  
+      if (response.ok) {
+        // Redirige al usuario al chat recién creado
+        const chatData = await response.json();
+        router.push(`/dashboard_empresa/chat_empresa`); // Redirige al chat
+      } else {
+        console.error('Error creating chat');
+      }
+    } catch (error) {
+      console.error('Error creating chat:', error);
+    }
+  };
+  
+
   useEffect(() => {
+    const storedUserId = localStorage.getItem('user_id');
+    setUserId(storedUserId);
     const fetchAuthorName = async () => {
       try {
         const userResponse = await fetch(`${API_BASE_URL}/users/${project.author.userId}`);
@@ -77,6 +126,8 @@ const ProjectDetailsContent: React.FC<ProjectDetailsContentProps> = ({
         console.error('Error fetching author name:', error);
       }
     };
+
+    
 
     const fetchCollaborators = async () => {
       const collaboratorDetails: {
@@ -120,7 +171,6 @@ const ProjectDetailsContent: React.FC<ProjectDetailsContentProps> = ({
       <div className="bg-gray-100 p-4 rounded-lg mb-6">
         <h3 className="font-semibold text-lg text-gray-800 py-2">Documentos:</h3>
         {project.files.length > 0 ? (
-          // Mapeamos project.files para incluir un id (puedes usar cualquier identificador único si no tienes uno)
           <FileViewer 
             fileUrls={project.files.map((file, index) => ({ id: `${index}`, url: file.fileUrl }))}
             mode="onlyView"  
@@ -205,20 +255,33 @@ const ProjectDetailsContent: React.FC<ProjectDetailsContentProps> = ({
         </span>
       </div>
 
+      {/* Contact Button for Companies */}
+      { companyView && (
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={handleContactClick} 
+            className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200"
+          >
+            Contactar
+          </button>
+        </div>
+      )}
+
       {/* Edit Button */}
       {canView ? (
         <div className="mt-4 flex justify-end">
           {canEdit && (
             <button
-              onClick={() => router.push(`/dashboard/projects/${project.id}/edit`)} // Navegación dinámica
+              onClick={() => router.push(`/dashboard/projects/${project.id}/edit`)}
               className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
             >
-              Editar Proyecto
+              Editar
             </button>
           )}
         </div>
       ) : (
-        <p className="mt-4 text-red-600">No tienes acceso a este proyecto.</p>
+        <div className="mt-4 flex justify-end">
+        </div>
       )}
     </div>
   );

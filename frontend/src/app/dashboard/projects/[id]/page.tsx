@@ -49,13 +49,18 @@ const ProjectDetails: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [canEdit, setCanEdit] = useState(false);
   const [canView, setCanView] = useState(false);
+  const [companyView, setCompanyView] = useState(false);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('user_id');
+    const storedUserType = localStorage.getItem('accountType');
+    console.log(storedUserType);
+    
     if (!storedUserId) {
       return;
     }
     setUserId(storedUserId);
+    setCompanyView(storedUserType === 'company');
   }, []);
 
   useEffect(() => {
@@ -158,6 +163,7 @@ const ProjectDetails: React.FC = () => {
           project={project}
           canEdit={canEdit}
           canView={canView}
+          companyView={companyView} 
           onEdit={() => {
             alert('Redirigir a la página de edición del proyecto');
           }}
