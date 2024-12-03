@@ -14,6 +14,7 @@ const ProjectList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
+  let empresa_view = false
 
   useEffect(() => {
     const accountType = localStorage.getItem('accountType');
@@ -21,6 +22,11 @@ const ProjectList = () => {
     if (!storedUserId) return; // Si no hay un ID de usuario almacenado, no continuamos.
 
     setUserId(storedUserId);
+
+    if (accountType === "company"){
+      empresa_view = true;
+    }
+
     setUserType(accountType === 'empresa' ? "Empresa" : "Estudiante");
 
     const loadDataFromStorage = async () => {
@@ -88,7 +94,7 @@ const ProjectList = () => {
 
   return (
     <div className="flex min-h-screen">
-      <Sidebar />
+      <Sidebar empresa_view={empresa_view} />
       <div className="ml-48 p-8 w-full bg-gray-100">
         <div className="max-w-4xl w-full">
           <div className="flex justify-between items-center mb-6">

@@ -1,32 +1,34 @@
-// pages/chat.tsx
-"use client"
-import React, { useState } from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import Sidebar from '@/components/Dashboard/Sidebar';
 import ChatSidebar from '@/components/ChatSidebar';
 import ChatContent from '@/components/ChatContent';
 
 const ChatPage = () => {
-  const accountType = localStorage.getItem('accountType');
-  const storedUserId = localStorage.getItem('user_id');
+  const [accountType, setAccountType] = useState<string | null>(null);
+  const [userId, setUserId] = useState<number | undefined>(undefined);
   const [selectedChatId, setSelectedChatId] = useState<number | null>(null);
-  
-  let empresa_view = false;
 
-  if(accountType === "company"){
-    empresa_view = true;
-  }
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      // Solo acceder a localStorage en el cliente
+      const storedAccountType = localStorage.getItem('accountType');
+      const storedUserId = localStorage.getItem('user_id');
+      
+      setAccountType(storedAccountType);
+      setUserId(storedUserId ? parseInt(storedUserId, 10) : undefined);
+    }
+  }, []);
 
-  // Convertir storedUserId a number, asegurándose de que siempre se pase un valor válido
-  const userId = storedUserId ? parseInt(storedUserId, 10) : undefined;
+  const empresa_view = accountType === "company";
 
-  // Si no hay userId, podrías redirigir o mostrar un mensaje
   if (userId === undefined) {
-    return <div>No se encontró el usuario.</div>;  // O redirigir a otra página
+    return <div>No se encontró el usuario.</div>; // O redirigir a otra página
   }
 
   return (
-    <div className="flex min-h-screen ml-20">  {/* Se añade el margen izquierdo de 20 */}
-      <Sidebar empresa_view={empresa_view} /> {/* Cambia a true si es vista de empresa */}
+    <div className="flex min-h-screen ml-20">
+      <Sidebar empresa_view={empresa_view} />
       <ChatSidebar userId={userId} onSelectChat={setSelectedChatId} />
       {selectedChatId && <ChatContent chatId={selectedChatId} />}
     </div>
